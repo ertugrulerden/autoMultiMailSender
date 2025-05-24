@@ -33,6 +33,11 @@ attachmentsToAdd = [
 ]
 
 
+SMTP = "smtp.gmail.com"
+PORT = 465 # for gmail
+
+
+
 
 def logToTxt(logfile, logtext):
     with open(logfile, "a") as f:
@@ -62,7 +67,7 @@ def send_gmail(sender_email, sender_password, recipient_email, subject, body, at
                 logToTxt("log.txt", f"FAIL TO ATTACH: {filename} to {recipient_email} \t ERROR: {e}")
 
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        with smtplib.SMTP_SSL(SMTP, PORT) as server:
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, recipient_email, msg.as_string())
         print(f"Email sent successfully to '{recipient_email}'")
