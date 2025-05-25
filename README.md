@@ -23,7 +23,7 @@ A Python-based email automation tool built with Streamlit that allows you to sen
 1. Clone the repository:
 ```bash
 git clone https://github.com/ertugrulerden/autoMailSender.git
-cd autoMailSenderPY
+cd autoMailSender
 ```
 
 2. Install the required dependencies:
