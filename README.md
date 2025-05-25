@@ -75,6 +75,9 @@ The application maintains a detailed log file (`log.txt`) that records:
 - Attachment errors
 - Timestamps for all operations
 
+## Example Screenshot
+<img width="720" alt="Screenshot 2025-05-25 at 16 16 50" src="https://github.com/user-attachments/assets/e702ccba-5440-4ff4-822d-1ad7e0044ea9" />
+
 ## Contributing
 
 Feel free to submit issues and enhancement requests!
