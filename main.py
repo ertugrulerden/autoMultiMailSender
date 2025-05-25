@@ -9,32 +9,25 @@ import datetime
 # https://myaccount.google.com/apppasswords
 # create an "app" from the link and use the given code as mailAppPass
 
-yourMail = "yourmail@ordek.com"
-mailAppPass = "xxxx xxxx xxxx xxxx"
+with open("mailAndPass.txt", "r") as f:
+    lines = [line.strip() for line in f if line.strip()]
+    yourMail = lines[0]
+    mailAppPass = lines[1]
 
-# example inputs
-mailTitle = "International Internship - Ordek"
-mailBody = """
-Dear mr or mrs.
+with open("mailTitle.txt", "r", encoding="utf-8") as f:
+    mailTitle = f.read().strip()
 
-I hope this message finds you well. My name is Ordek, and I am a first-year Software Engineering student at X University. I am writing to express my interest in an internship opportunity at your institution.
-
-I'm eager to contribute and grow in areas such as software development and computer science. You'll find my CV and Motivation letter attached for your review.
-
-Thank you for your time and consideration.
-
-Best regards,
-Ordek
-"""
+with open("mailBody.txt", "r", encoding="utf-8") as f:
+    mailBody = f.read().strip()
 
 attachmentsToAdd = [
     "egCV.pdf",
     "egMotivLet.pdf",
 ]
 
-
+# for gmail
 SMTP = "smtp.gmail.com"
-PORT = 465 # for gmail
+PORT = 465 
 
 
 
@@ -92,7 +85,7 @@ with open("mails.txt", "r") as f:
             recipient_email=mail,
             subject=mailTitle,
             body=mailBody,
-            attachments=attachmentsToAdd
+            attachments=attachmentsToAdd 
         )
     
     with open("log.txt", "a") as f:
