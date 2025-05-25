@@ -1,0 +1,2 @@
+25/05-14:04:53	|	SENT: example@mail.com
+25/05-15:19:45	|	FAIL: kanye@west.com 	 ERROR: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 4fb4d7f45d1cf-6021031bb84sm8250288a12.50 - gsmtp')
