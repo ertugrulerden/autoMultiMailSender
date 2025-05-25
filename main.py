@@ -112,13 +112,23 @@ def on_input_change():
     )
 
 sender_email = st.text_input("Your Email Address", value=st.session_state.sender_email, key="sender_email", on_change=on_input_change)
-sender_password = st.text_input("App Password", value=st.session_state.sender_password, type="password", key="sender_password", on_change=on_input_change)
+sender_password = st.text_input(
+    "App Password", 
+    value=st.session_state.sender_password, 
+    type="password", 
+    key="sender_password", 
+    on_change=on_input_change,
+    help="To get an app password for Gmail:\n1. Go to your Google Account settings\n2. Navigate to Security\n3. Enable 2-Step Verification if not already enabled\n4. Go to [THIS](https://myaccount.google.com/apppasswords) page\n5. Create an 'app', use the given code as password"
+)
+
 subject = st.text_input("Mail Subject", value=st.session_state.subject, key="subject", on_change=on_input_change)
 body = st.text_area("Mail Body", value=st.session_state.body, key="body", on_change=on_input_change)
 recipients = st.text_area("Recipient Emails (one per line)", value=st.session_state.recipients, key="recipients", on_change=on_input_change, height=150)
 attachments = st.file_uploader("Attachments", accept_multiple_files=True)
-
 log_placeholder = st.empty()
+
+
+
 
 def logToTxt(logfile, logtext):
     with open(logfile, "a") as f:
@@ -154,6 +164,7 @@ def send_gmail(sender_email, sender_password, recipient_email, subject, body, at
     except Exception as e:
         st.error(f"Failed to send email: {e}")
         logToTxt("log.txt", f"FAIL: {recipient_email} \t ERROR: {e}")
+
 
 if st.button("Send Emails"):
     if not sender_email or not sender_password or not subject or not body or not recipients:
