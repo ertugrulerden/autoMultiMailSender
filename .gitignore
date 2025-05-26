@@ -1,10 +1,8 @@
 
 *.pdf
 log.txt
-inputs_state.json
-
-log.txt
 saved_inputs.json
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -11,6 +11,9 @@ A Python-based email automation tool built with Streamlit that allows you to sen
 - 📝 Detailed logging of email operations
 - ⚙️ Customizable SMTP settings
 - 🔄 Default Gmail configuration with easy reset option
+- ⏱️ Configurable delay between emails (hours, minutes, seconds)
+- 💬 Support for comments in recipient list (lines starting with //)
+- 📊 Real-time progress tracking with success/failure counts
 
 ## Prerequisites
 
@@ -46,6 +49,8 @@ streamlit run main.py
    - Customize SMTP settings if needed
    - Enter email subject and body
    - Add recipient email addresses (one per line)
+   - Add comments in recipient list by starting lines with //
+   - Set delay between emails if needed
    - Upload any attachments if needed
 
 4. Click "Send Emails" to start the sending process
@@ -74,6 +79,8 @@ The application maintains a detailed log file (`log.txt`) that records:
 - Failed attempts
 - Attachment errors
 - Timestamps for all operations
+- Real-time progress tracking
+- Success and failure counts
 
 ## Example Screenshot
 <img width="720" alt="Screenshot 2025-05-25 at 16 16 50" src="https://github.com/user-attachments/assets/e702ccba-5440-4ff4-822d-1ad7e0044ea9" />
