@@ -1,17 +1,17 @@
 {
-    "sender_email": "mail@test.com",
-    "sender_password": "xxxx yyyy zzzz aaaa",
-    "subject": "mail title",
-    "body": "yo wassupppp\n\nProgramming languages:\u200b C, C++,",
-    "recipients": "testaddress@gmail.com\nkanye@west.com\n\n// comment lines exist in here \ud83e\udd73\n// but only as a line, not end of mails\n",
+    "sender_email": "example.sender@gmail.com",
+    "sender_password": "example-app-password",
+    "subject": "Example Subject",
+    "body": "<b>Hello,</b><br><br>This is a <i>test email</i> sent using <a href=\"https://www.example.com\">Auto Mail Sender</a>.<br><br>Best regards,<br><b>John Doe</b>",
+    "recipients": "example.recipient1@gmail.com\nexample.recipient2@gmail.com",
     "smtp_settings": {
         "smtp": "smtp.gmail.com",
         "port": 465
     },
+    "use_html": true,
     "delay_settings": {
         "hours": 0,
-        "minutes": 1,
-        "seconds": 30
-    },
-    "use_html": true
+        "minutes": 0,
+        "seconds": 3
+    }
 }

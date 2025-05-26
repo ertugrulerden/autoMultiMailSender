@@ -1,7 +1,7 @@
 
 *.pdf
-log.txt
-saved_inputs.json
+*.txt
+*.json
 
 
 # Byte-compiled / optimized / DLL files
