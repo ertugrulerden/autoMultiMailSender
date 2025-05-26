@@ -1,1 +1,16 @@
-{"sender_email": "test@mail.com", "sender_password": "xxxx yyyy zzzz jjjj", "subject": "example mail title", "body": "yo wassup", "recipients": "testaddress@gmail.com\nkanye@west.com\n\n// comment lines exist in here \ud83e\udd73\n// but only as a line, not end of mails\n", "smtp_settings": {"smtp": "smtp.gmail.com", "port": 465}}
+{
+    "sender_email": "mail@test.com",
+    "sender_password": "xxxx yyyy zzzz aaaa",
+    "subject": "mail title",
+    "body": "yo wassupppp",
+    "recipients": "testaddress@gmail.com\nkanye@west.com\n\n// comment lines exist in here \ud83e\udd73\n// but only as a line, not end of mails\n",
+    "smtp_settings": {
+        "smtp": "smtp.gmail.com",
+        "port": 465
+    },
+    "delay_settings": {
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 5
+    }
+}

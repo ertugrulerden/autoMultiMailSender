@@ -6,6 +6,7 @@ from email import encoders
 import datetime
 import os
 import json
+from time import sleep
 
 try:
     import streamlit as st
@@ -29,7 +30,7 @@ DEFAULT_PORT = 465
 SAVED_DATA_FILE = "saved_inputs.json"
 SAVED_ATTACHMENTS_DIR = "saved_attachments"
 
-def save_inputs(sender_email, sender_password, subject, body, recipients, smtp_settings):
+def save_inputs(sender_email, sender_password, subject, body, recipients, smtp_settings, delay_hours=0, delay_minutes=0, delay_seconds=0):
     """Save all input values to a JSON file"""
     data = {
         "sender_email": sender_email,
@@ -37,11 +38,16 @@ def save_inputs(sender_email, sender_password, subject, body, recipients, smtp_s
         "subject": subject,
         "body": body,
         "recipients": recipients,
-        "smtp_settings": smtp_settings
+        "smtp_settings": smtp_settings,
+        "delay_settings": {
+            "hours": delay_hours,
+            "minutes": delay_minutes,
+            "seconds": delay_seconds
+        }
     }
     
     with open(SAVED_DATA_FILE, "w") as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=4)
 
 def load_inputs():
     """Load saved input values from JSON file"""
@@ -53,7 +59,14 @@ def load_inputs():
     
     return data
 
-st.title("Auto Mail Sender")
+
+
+col_icon, col_title = st.columns([1, 8])
+with col_icon:
+    st.image("icon.png", width=96)
+with col_title:
+    st.title("Auto Mail Sender")
+
 
 
 if "sender_email" not in st.session_state:
@@ -70,9 +83,19 @@ if "smtp" not in st.session_state:
     st.session_state.smtp = DEFAULT_SMTP
 if "port" not in st.session_state:
     st.session_state.port = DEFAULT_PORT
+if "emails_sent" not in st.session_state:
+    st.session_state.emails_sent = 0
+if "total_emails" not in st.session_state:
+    st.session_state.total_emails = 0
+if "hours" not in st.session_state:
+    st.session_state.hours = 0
+if "minutes" not in st.session_state:
+    st.session_state.minutes = 0
+if "seconds" not in st.session_state:
+    st.session_state.seconds = 0
 
 
-col1, col2 = st.columns([3, 1])
+col1, col2 = st.columns([5, 3])
 
 
 with col1:
@@ -86,7 +109,7 @@ with col1:
 
 
 with col2:
-    if st.button("Recover Last Inputs", use_container_width=True):
+    if st.button("🔄 Recover Last Inputs", use_container_width=True):
         saved_data = load_inputs()
         if saved_data:
             st.session_state.sender_email = saved_data.get("sender_email", "")
@@ -97,6 +120,10 @@ with col2:
             if "smtp_settings" in saved_data:
                 st.session_state.smtp = saved_data["smtp_settings"].get("smtp", DEFAULT_SMTP)
                 st.session_state.port = saved_data["smtp_settings"].get("port", DEFAULT_PORT)
+            if "delay_settings" in saved_data:
+                st.session_state.hours = saved_data["delay_settings"].get("hours", 0)
+                st.session_state.minutes = saved_data["delay_settings"].get("minutes", 0)
+                st.session_state.seconds = saved_data["delay_settings"].get("seconds", 0)
             st.success("Inputs recovered successfully!")
         else:
             st.error("No saved inputs found!")
@@ -108,7 +135,10 @@ def on_input_change():
         st.session_state.subject,
         st.session_state.body,
         st.session_state.recipients,
-        {"smtp": st.session_state.smtp, "port": st.session_state.port}
+        {"smtp": st.session_state.smtp, "port": st.session_state.port},
+        st.session_state.hours,
+        st.session_state.minutes,
+        st.session_state.seconds
     )
 
 sender_email = st.text_input("Your Email Address", value=st.session_state.sender_email, key="sender_email", on_change=on_input_change)
@@ -133,7 +163,7 @@ log_placeholder = st.empty()
 def logToTxt(logfile, logtext):
     with open(logfile, "a") as f:
         now = datetime.datetime.now().strftime("%d/%m-%H:%M:%S")
-        f.write(f"{now}\t|\t{logtext}\n")
+        f.write(f"{now} \t|\t {logtext}\n")
 
 def send_gmail(sender_email, sender_password, recipient_email, subject, body, attachments=None):
     msg = MIMEMultipart()
@@ -158,7 +188,8 @@ def send_gmail(sender_email, sender_password, recipient_email, subject, body, at
         with smtplib.SMTP_SSL(st.session_state.smtp, st.session_state.port) as server:
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, recipient_email, msg.as_string())
-        st.success(f"Email sent successfully to '{recipient_email}'")
+        st.session_state.emails_sent += 1
+        st.success(f"Email sent successfully to '{recipient_email}' ({st.session_state.emails_sent}/{st.session_state.total_emails})")
         logToTxt("log.txt", f"SENT: {recipient_email}")
 
     except Exception as e:
@@ -166,19 +197,66 @@ def send_gmail(sender_email, sender_password, recipient_email, subject, body, at
         logToTxt("log.txt", f"FAIL: {recipient_email} \t ERROR: {e}")
 
 
-if st.button("Send Emails"):
-    if not sender_email or not sender_password or not subject or not body or not recipients:
-        st.error("Please fill in all fields.")
-    else:
-        recipient_list = [email.strip() for email in recipients.splitlines() if email.strip() and not email.strip().startswith("//")]
-        for mail in recipient_list:
-            send_gmail(
-                sender_email=sender_email,
-                sender_password=sender_password,
-                recipient_email=mail,
-                subject=subject,
-                body=body,
-                attachments=attachments if attachments else None
-            )
-        st.info("All emails processed. Check log.txt for details.")
+colText, col1, col2, col3 = st.columns(4)
+with colText:
+    st.subheader("Delay")
+    st.caption("Set a delay between sending each email.")
+with col1:
+    hours = st.number_input("Hours", key="hours", min_value=0, step=1, format="%d", on_change=on_input_change)
+with col2:
+    minutes = st.number_input("Minutes", key="minutes", min_value=0, step=1, format="%d", on_change=on_input_change)
+with col3:
+    seconds = st.number_input("Seconds", key="seconds", min_value=0, step=1, format="%d",on_change=on_input_change)
+
+
+
+with st.container():
+    with st.expander("Log Output", expanded=False):
+        try:
+            with open("log.txt", "r") as log_file:
+                lines = log_file.readlines()
+                logs = "".join(reversed(lines))
+        except FileNotFoundError:
+            st.warning("Log file not found.")
+        
+        st.text_area("Log File", logs, height=300)
+        st.caption("This log shows the most recent email activity starting from top. Errors and successes are recorded here.")
+    
+        
+
+
+    if st.button("📧 Send Emails", use_container_width=True):
+        if not sender_email or not sender_password or not subject or not body or not recipients:
+            st.error("Please fill in all fields.")
+        else:
+            recipient_list = [email.strip() for email in recipients.splitlines() if email.strip() and not email.strip().startswith("//")]
+            st.session_state.total_emails = len(recipient_list)
+            st.session_state.emails_sent = 0
+            
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            for i, mail in enumerate(recipient_list):
+                send_gmail(
+                    sender_email=sender_email,
+                    sender_password=sender_password,
+                    recipient_email=mail,
+                    subject=subject,
+                    body=body,
+                    attachments=attachments if attachments else None
+                )
+                progress = (i + 1) / len(recipient_list)
+                progress_bar.progress(progress)
+
+                status_text.text(f"Progress: {i+1}/{st.session_state.total_emails} tried \t Success: {st.session_state.emails_sent} \t Failed: {(i+1) - st.session_state.emails_sent}")
+
+
+                delayToUse = (hours*60*60)+(minutes*60)+seconds
+                if (delayToUse > 0) and (i < len(recipient_list) - 1):
+                    sleep(delayToUse)
+                
+
+            with open("log.txt", "a") as f:
+                f.write("\n")
+            st.info(f"All emails processed. {st.session_state.emails_sent}/{st.session_state.total_emails} emails sent successfully. Check Log Output for details.")
 
