@@ -223,8 +223,8 @@ def send_gmail(sender_email, sender_password, recipient_email, subject, body, at
     msg['From'] = sender_email
     msg['To'] = recipient_email
     msg['Subject'] = subject
-    
-    # Handle HTML or plain text based on the toggle
+
+
     if st.session_state.use_html:
         msg.attach(MIMEText(body, 'html'))
     else:
