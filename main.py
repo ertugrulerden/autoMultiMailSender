@@ -152,7 +152,7 @@ sender_password = st.text_input(
 )
 
 subject = st.text_input("Mail Subject", value=st.session_state.subject, key="subject", on_change=on_input_change)
-body = st.text_area("Mail Body", value=st.session_state.body, key="body", on_change=on_input_change)
+body = st.text_area("Mail Body", value=st.session_state.body, key="body", on_change=on_input_change, help="Supports HTML formatting. Use <b>text</b> for bold, <i>text</i> for italic, etc.")
 recipients = st.text_area("Recipient Emails (one per line)", value=st.session_state.recipients, key="recipients", on_change=on_input_change, height=150)
 attachments = st.file_uploader("Attachments", accept_multiple_files=True)
 log_placeholder = st.empty()
@@ -170,7 +170,7 @@ def send_gmail(sender_email, sender_password, recipient_email, subject, body, at
     msg['From'] = sender_email
     msg['To'] = recipient_email
     msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
+    msg.attach(MIMEText(body, 'html'))
 
     if attachments:
         for uploaded_file in attachments:

@@ -2,7 +2,7 @@
     "sender_email": "mail@test.com",
     "sender_password": "xxxx yyyy zzzz aaaa",
     "subject": "mail title",
-    "body": "yo wassupppp",
+    "body": "yo wassupppp\n\nProgramming languages:\u200b C, C++,",
     "recipients": "testaddress@gmail.com\nkanye@west.com\n\n// comment lines exist in here \ud83e\udd73\n// but only as a line, not end of mails\n",
     "smtp_settings": {
         "smtp": "smtp.gmail.com",
@@ -10,7 +10,8 @@
     },
     "delay_settings": {
         "hours": 0,
-        "minutes": 0,
-        "seconds": 5
-    }
+        "minutes": 1,
+        "seconds": 30
+    },
+    "use_html": true
 }
