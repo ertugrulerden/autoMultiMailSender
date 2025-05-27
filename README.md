@@ -30,7 +30,8 @@ To use Gmail:
 3. Use this password in the app
 
 ## Example Screenshot
-<img width="555" alt="Screenshot 2025-05-27 at 16 12 36" src="https://github.com/user-attachments/assets/6e384e67-b742-4a62-a9c8-92d2701a197a" />
+<img width="555" alt="mailSs" src="https://github.com/user-attachments/assets/d60bdb95-de81-4486-b296-639c14504289" />
+
 
 ## License
 
