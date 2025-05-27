@@ -7,7 +7,7 @@ import datetime
 import os
 import json
 from time import sleep
-import base64
+import random
 
 try:
     import streamlit as st
@@ -51,6 +51,10 @@ def save_inputs(sender_email=None, sender_password=None, subject=None, body=None
                 "hours": 0,
                 "minutes": 0,
                 "seconds": 0
+            },
+            "MinMaxDelaySecs": {
+                "min": 0,
+                "max": 0
             }
         }
     
@@ -127,6 +131,9 @@ if "seconds" not in st.session_state:
     st.session_state.seconds = 0
 if "use_html" not in st.session_state:
     st.session_state.use_html = False
+
+minDelaySecs = 0
+maxDelaySecs = 0
 
 
 col1, col2 = st.columns([5, 3])
@@ -255,7 +262,7 @@ def send_gmail(sender_email, sender_password, recipient_email, subject, body, at
         logToTxt("log.txt", f"FAIL: {recipient_email} \t ERROR: {e}")
 
 
-colText, col1, col2, col3 = st.columns(4)
+colText, col1, col2, col3, randomizerCol = st.columns([6, 5, 5, 5, 6])
 with colText:
     st.subheader("Delay")
     st.caption("Set a delay between sending each email.")
@@ -265,8 +272,40 @@ with col2:
     minutes = st.number_input("Minutes", key="minutes", min_value=0, step=1, format="%d", on_change=lambda: on_input_change("minutes"))
 with col3:
     seconds = st.number_input("Seconds", key="seconds", min_value=0, step=1, format="%d", on_change=lambda: on_input_change("seconds"))
+with randomizerCol:
+    st.markdown("""<div style="margin-top: 24px;"></div>""",
+        unsafe_allow_html=True)
+    
+    with st.popover("Randomizer"):
+        latestDelayArea = st.empty()
+        total_delay_seconds = int(st.session_state.hours) * 3600 + int(st.session_state.minutes) * 60 + int(st.session_state.seconds)
 
+        max_random_delay = max(total_delay_seconds, 1)
+        random_delay = st.slider(
+            "Randomize delay by up to ± seconds",
+            min_value=0,
+            max_value=max_random_delay,
+            value=0,
+            step=1,
+            help="Add or subtract up to this many seconds randomly to each delay between emails.",
+            key="random_delay"
+        )
 
+        min_delay = max(total_delay_seconds - st.session_state.random_delay, 0)
+        max_delay = total_delay_seconds + st.session_state.random_delay
+        min_hrs = min_delay // 3600
+        min_mins = (min_delay % 3600) // 60
+        min_secs = min_delay % 60
+        max_hrs = max_delay // 3600
+        max_mins = (max_delay % 3600) // 60
+        max_secs = max_delay % 60
+
+        minDelaySecs = min_delay
+        maxDelaySecs = max_delay
+
+        latestDelayArea.text(
+            f"Delay: [{int(min_hrs)}h {int(min_mins)}m {int(min_secs)}s - {int(max_hrs)}h {int(max_mins)}m {int(max_secs)}s]"
+        )
 
 with st.container():
     with st.expander("Log Output", expanded=False):
@@ -316,14 +355,18 @@ with st.container():
 
                 delayToUse = (hours*60*60)+(minutes*60)+seconds
                 if (delayToUse > 0) and (i < len(recipient_list) - 1):
-                    import time
+                    
+                    if minDelaySecs > 0 or maxDelaySecs > 0:
+                        delayToUse = random.randint(minDelaySecs, maxDelaySecs)
+                        # st.warning(f"Randomized delay: {delayToUse} seconds (between {minDelaySecs} and {maxDelaySecs} seconds)")
+                    
                     remaining = delayToUse
                     while remaining > 0:
                         hrs = remaining // 3600
                         mins = (remaining % 3600) // 60
                         secs = remaining % 60
                         leftDelay.text(f"delay: {int(hrs)}h {int(mins)}m {int(secs)}s")
-                        time.sleep(1)
+                        sleep(1)
                         remaining -= 1
                     leftDelay.image("icon.png", width=25)
             leftDelay.text("✅ Done")
@@ -331,4 +374,5 @@ with st.container():
             with open("log.txt", "a") as f:
                 f.write("\n")
             st.info(f"All emails processed. {st.session_state.emails_sent}/{st.session_state.total_emails} emails sent successfully. Check Log Output for details.")
+
 
