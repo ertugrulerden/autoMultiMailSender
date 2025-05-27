@@ -7,7 +7,7 @@ import datetime
 import os
 import json
 from time import sleep
-import html
+import base64
 
 try:
     import streamlit as st
@@ -27,9 +27,7 @@ except ImportError:
 DEFAULT_SMTP = "smtp.gmail.com"
 DEFAULT_PORT = 465
 
-
 SAVED_DATA_FILE = "saved_inputs.json"
-SAVED_ATTACHMENTS_DIR = "saved_attachments"
 
 def save_inputs(sender_email=None, sender_password=None, subject=None, body=None, recipients=None, smtp_settings=None, delay_hours=None, delay_minutes=None, delay_seconds=None, use_html=None):
     """Save input values to a JSON file, only updating the provided fields"""
@@ -93,7 +91,6 @@ def load_inputs():
         data = json.load(f)
     
     return data
-
 
 
 col_icon, col_title = st.columns([1, 8])
@@ -234,10 +231,13 @@ def send_gmail(sender_email, sender_password, recipient_email, subject, body, at
         for uploaded_file in attachments:
             try:
                 part = MIMEBase('application', 'octet-stream')
-                part.set_payload(uploaded_file.read())
+                file_content = uploaded_file.read()
+                part.set_payload(file_content)
                 encoders.encode_base64(part)
                 part.add_header('Content-Disposition', f'attachment; filename={uploaded_file.name}')
                 msg.attach(part)
+
+                uploaded_file.seek(0) # reset file pointer
             except Exception as e:
                 st.error(f"Failed to attach file: {uploaded_file.name}, error: {e}")
                 logToTxt("log.txt", f"FAIL TO ATTACH: {uploaded_file.name} to {recipient_email} \t ERROR: {e}")
@@ -292,7 +292,12 @@ with st.container():
             st.session_state.emails_sent = 0
             
             progress_bar = st.progress(0)
-            status_text = st.empty()
+
+            statusCol, leftDelayCol = st.columns([3, 1])
+            with statusCol:
+                status_text = st.empty()
+            with leftDelayCol:
+                leftDelay = st.empty()
             
             for i, mail in enumerate(recipient_list):
                 send_gmail(
@@ -307,12 +312,21 @@ with st.container():
                 progress_bar.progress(progress)
 
                 status_text.text(f"Progress: {i+1}/{st.session_state.total_emails} tried \t Success: {st.session_state.emails_sent} \t Failed: {(i+1) - st.session_state.emails_sent}")
-
+                
 
                 delayToUse = (hours*60*60)+(minutes*60)+seconds
                 if (delayToUse > 0) and (i < len(recipient_list) - 1):
-                    sleep(delayToUse)
-                
+                    import time
+                    remaining = delayToUse
+                    while remaining > 0:
+                        hrs = remaining // 3600
+                        mins = (remaining % 3600) // 60
+                        secs = remaining % 60
+                        leftDelay.text(f"delay: {int(hrs)}h {int(mins)}m {int(secs)}s")
+                        time.sleep(1)
+                        remaining -= 1
+                    leftDelay.image("icon.png", width=25)
+            leftDelay.text("✅ Done")
 
             with open("log.txt", "a") as f:
                 f.write("\n")
