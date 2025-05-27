@@ -1,0 +1,5 @@
+27/05-16:12:22 	|	 FAIL: example.recipient1@gmail.com 	 ERROR: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials a640c23a62f3a-ad5572f6428sm1593107166b.185 - gsmtp')
+27/05-16:12:27 	|	 FAIL: example.recipient2@gmail.com 	 ERROR: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials a640c23a62f3a-ad52d06dcafsm1878293666b.54 - gsmtp')
+27/05-16:12:33 	|	 FAIL: example.recipient3@gmail.com 	 ERROR: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials a640c23a62f3a-ad52d06cdccsm1833877766b.49 - gsmtp')
+27/05-16:12:39 	|	 FAIL: example.recipient4@gmail.com 	 ERROR: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials a640c23a62f3a-ad88b5d54fbsm125373566b.125 - gsmtp')
+

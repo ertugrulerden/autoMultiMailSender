@@ -1,94 +1,71 @@
 # Auto Mail Sender
 
-A Python-based email automation tool built with Streamlit that allows you to send bulk emails with attachments through a user-friendly web interface.
+A simple Python tool to send bulk emails with attachments through a user-friendly web interface.
 
-## Features
+## Quick Start
 
-- 📧 Send bulk emails to multiple recipients
-- 📎 Support for multiple file attachments
-- 🔒 Secure SMTP connection with SSL
-- 💾 Auto-save form inputs for quick recovery
-- 📝 Detailed logging of email operations
-- ⚙️ Customizable SMTP settings
-- 🔄 Default Gmail configuration with easy reset option
-- ⏱️ Configurable delay between emails (hours, minutes, seconds)
-- 💬 Support for comments in recipient list (lines starting with //)
-- 📊 Real-time progress tracking with success/failure counts
-
-## Prerequisites
-
-- Python 3.x
-- Gmail account (for default configuration)
-- App password for Gmail (if using Gmail)
-
-## Installation
-
-1. Clone the repository:
+1. Install Python 3.x
+2. Clone and run:
 ```bash
 git clone https://github.com/ertugrulerden/autoMultiMailSender.git
 cd autoMultiMailSender
-```
-
-2. Install the required dependencies:
-```bash
 pip install streamlit
-```
-
-## Usage
-
-1. Run the application:
-```bash
 streamlit run main.py
 ```
 
-2. Open your web browser and navigate to the provided local URL (typically http://localhost:8501)
+## Main Features
 
-3. Configure your email settings:
-   - Enter your email address
-   - For Gmail users, use an App Password (see below)
-   - Customize SMTP settings if needed
-   - Enter email subject and body
-   - Add recipient email addresses (one per line)
-   - Add comments in recipient list by starting lines with //
-   - Set delay between emails if needed
-   - Upload any attachments if needed
+- Send emails to multiple recipients at once
+- Add file attachments
+- Set delays between emails
+- Save your email settings
+- Track email sending progress
+- Works with Gmail (and other email providers)
 
-4. Click "Send Emails" to start the sending process
+## Gmail Setup
 
-## Gmail App Password Setup
-
-To use Gmail as your SMTP server:
-
-1. Go to your Google Account settings
-2. Navigate to Security
-3. Enable 2-Step Verification if not already enabled
-4. Go to [App Passwords](https://myaccount.google.com/apppasswords)
-5. Create a new app and use the generated password
-
-## File Structure
-
-- `main.py` - Main application file
-- `saved_inputs.json` - Stores form inputs for recovery
-- `log.txt` - Contains email sending logs
-- `saved_attachments/` - Directory for saved attachments
-
-## Logging
-
-The application maintains a detailed log file (`log.txt`) that records:
-- Successful email deliveries
-- Failed attempts
-- Attachment errors
-- Timestamps for all operations
-- Real-time progress tracking
-- Success and failure counts
+To use Gmail:
+1. Enable 2-Step Verification in your Google Account
+2. Create an App Password: [Google App Passwords](https://myaccount.google.com/apppasswords)
+3. Use this password in the app
 
 ## Example Screenshot
-<img width="720" alt="Screenshot 2025-05-25 at 16 16 50" src="https://github.com/user-attachments/assets/e702ccba-5440-4ff4-822d-1ad7e0044ea9" />
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
+<img width="555" alt="Screenshot 2025-05-27 at 16 12 36" src="https://github.com/user-attachments/assets/6e384e67-b742-4a62-a9c8-92d2701a197a" />
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+MIT License - see LICENSE file for details.
+
+---
+
+## Detailed Features
+
+### Email Features
+- 📧 Send bulk emails to multiple recipients
+- 📎 Support for multiple file attachments
+- 🎨 HTML email support with toggle option
+- 💬 Support for comments in recipient list (lines starting with //)
+
+### Security & Settings
+- 🔒 Secure SMTP connection with SSL
+- ⚙️ Customizable SMTP settings
+- 🔄 Default Gmail configuration with easy reset option
+- 🔐 Secure password field for app password
+
+### Automation & Timing
+- ⏱️ Configurable delay between emails (hours, minutes, seconds)
+- 🎲 Random delay variation between emails
+- ⏳ Countdown timer for delays between emails
+
+### User Experience
+- 💾 Auto-save form inputs for quick recovery
+- 📱 Responsive layout with column-based design
+- 💡 Helpful tooltips for complex features
+- 🎯 Auto-installation of required dependencies
+
+### Monitoring & Logging
+- 📊 Real-time progress tracking with success/failure counts
+- 📈 Progress bar visualization
+- 🔍 Detailed status display showing attempted, successful, and failed emails
+- 📋 Expandable log output section
+- 📝 Detailed logging of email operations
